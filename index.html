@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daily Options Strategy</title>
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: "YOUR_ONESIGNAL_APP_ID",
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Options Strategy Assistant</h1>
+  <label for="nifty">Nifty Price:</label>
+  <input type="number" id="nifty" placeholder="Enter Nifty price"><br><br>
+  <label for="sensex">Sensex Price:</label>
+  <input type="number" id="sensex" placeholder="Enter Sensex price"><br><br>
+  <button onclick="analyze()">Get Strategy</button>
+  <p id="result"></p>
+
+  <script src="strategy.js"></script>
+</body>
+</html>
