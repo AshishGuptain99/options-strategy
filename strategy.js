@@ -3,30 +3,21 @@ function analyze() {
   const sensex = parseFloat(document.getElementById("sensex").value);
 
   // Mock indicators (replace with real data later)
-  const pcr = 1.4; // example value
-  const ivPercentile = 75; // example value
-  const newsSentiment = "positive"; // example value
+  const pcr = 0.6; // bearish
+  const ivPercentile = 80; // high IV
+  const newsSentiment = "negative"; // bearish
   const previousNifty = 19800; // mock previous close
   const previousSensex = 66000;
 
   let decision = "";
 
-  const bullishConditions =
-    pcr > 1.3 &&
-    ivPercentile > 70 &&
-    newsSentiment === "positive" &&
-    nifty > previousNifty;
+  const isBullish = pcr > 1.3 && newsSentiment === "positive" && nifty > previousNifty;
+  const isBearish = pcr < 0.7 && newsSentiment === "negative" && nifty < previousNifty;
 
-  const bearishConditions =
-    pcr < 0.7 &&
-    ivPercentile > 70 &&
-    newsSentiment === "negative" &&
-    nifty < previousNifty;
-
-  if (bullishConditions) {
+  if (isBullish) {
     decision = "📈 Market is bullish.\nBuy Nifty ATM CE (Call Option). Target 5%, SL 2%.";
     sendNotification("Trade Alert: Buy Nifty CE");
-  } else if (bearishConditions) {
+  } else if (isBearish) {
     decision = "📉 Market is bearish.\nBuy Nifty ATM PE (Put Option). Target 5%, SL 2%.";
     sendNotification("Trade Alert: Buy Nifty PE");
   } else {
@@ -37,7 +28,7 @@ function analyze() {
 }
 
 function sendNotification(message) {
-  OneSignal.push(function () {
+  OneSignal.push(function() {
     OneSignal.sendSelfNotification(
       "Options Trade Signal",
       message,
