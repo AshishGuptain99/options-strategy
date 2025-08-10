@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Daily Options Strategy</title>
-  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <meta charset="UTF-8">
+  <title>Daily Options Strategy & Market Dashboard</title>
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
   <script>
     window.OneSignal = window.OneSignal || [];
     OneSignal.push(function() {
@@ -11,17 +12,98 @@
       });
     });
   </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+    }
+    input {
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+    button {
+      padding: 8px 16px;
+      margin-top: 10px;
+    }
+    .section {
+      margin-bottom: 40px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+  </style>
 </head>
 <body>
-  <h1>Options Strategy Assistant</h1>
-  <label for="nifty">Nifty Price:</label>
-  <input type="number" id="nifty" placeholder="Enter Nifty price"><br><br>
-  <label for="sensex">Sensex Price:</label>
-  <input type="number" id="sensex" placeholder="Enter Sensex price"><br><br>
-  <button onclick="analyze()">Get Strategy</button>
-  <p id="result"></p>
 
-  <script src="strategy.js"></script>
+  <!-- 🔍 Options Strategy Assistant -->
+  <div class="section">
+    <h1>🧠 Options Strategy Assistant</h1>
+    <label for="nifty">Nifty Price:</label><br>
+    <input type="number" id="nifty" placeholder="Enter Nifty price"><br><br>
+
+    <label for="sensex">Sensex Price:</label><br>
+    <input type="number" id="sensex" placeholder="Enter Sensex price"><br><br>
+
+    <button onclick="analyze()">Get Strategy</button>
+    <p id="strategy-result"></p>
+  </div>
+
+  <!-- 📊 Market Dashboard -->
+  <div class="section">
+    <h1>📊 Real-Time Market Dashboard</h1>
+    <p><strong>PCR:</strong> <span id="pcr"></span></p>
+    <p><strong>IV:</strong> <span id="iv"></span></p>
+    <p><strong>Support:</strong> <span id="support"></span></p>
+    <p><strong>Resistance:</strong> <span id="resistance"></span></p>
+  </div>
+
+  <!-- 🧠 Strategy Logic -->
+  <script>
+    function analyze() {
+      const nifty = parseFloat(document.getElementById("nifty").value);
+      const sensex = parseFloat(document.getElementById("sensex").value);
+      let strategy = "";
+
+      if (isNaN(nifty) || isNaN(sensex)) {
+        strategy = "Please enter valid prices for both Nifty and Sensex.";
+      } else if (nifty > 20000 && sensex > 70000) {
+        strategy = "Consider a Bear Put Spread strategy.";
+      } else if (nifty < 18000 && sensex < 65000) {
+        strategy = "Consider a Bull Call Spread strategy.";
+      } else {
+        strategy = "Market is range-bound. Consider an Iron Condor strategy.";
+      }
+
+      document.getElementById("strategy-result").textContent = strategy;
+    }
+  </script>
+
+  <!-- 📈 Market Data Fetch -->
+  <script>
+    async function fetchMarketData() {
+      try {
+        const res = await fetch("/api/market-data");
+        const data = await res.json();
+        document.getElementById("pcr").textContent = data.pcr || "N/A";
+        document.getElementById("iv").textContent = data.iv || "N/A";
+        document.getElementById("support").textContent = data.support || "N/A";
+        document.getElementById("resistance").textContent = data.resistance || "N/A";
+      } catch (error) {
+        console.error("Error fetching market data:", error);
+      }
+    }
+
+    fetchMarketData();
+    setInterval(fetchMarketData, 60000); // refresh every minute
+  </script>
+
 </body>
-
 </html>
